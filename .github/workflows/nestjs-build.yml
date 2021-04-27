@@ -3,7 +3,6 @@ name: NestJS - Build
 on:
   push:
     branches:
-      - 'master'
       - 'develop'
       - 'release-*'
 
