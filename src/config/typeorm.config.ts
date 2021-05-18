@@ -8,5 +8,8 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   password: process.env.DATABASE_PASSWORD || 'changeme',
   database: process.env.DATABASE_NAME || 'tfmserver',
   entities: [__dirname + '/../**/*.entity.{js,ts}'],
+  extra: {
+    ssl: true,
+  },
   synchronize: true,
 };
