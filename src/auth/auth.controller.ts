@@ -4,14 +4,15 @@ import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 import { User } from './entities/user.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from './decorators/get-user-decorator';
+import { SignupUserDto } from './dto/signup-user.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('/signup')
-  signUp(@Body(ValidationPipe) authCredentialsDto: AuthCredentialsDto): Promise<User> {
-    return this.authService.signUp(authCredentialsDto);
+  signUp(@Body(ValidationPipe) signupUserDto: SignupUserDto): Promise<User> {
+    return this.authService.signUp(signupUserDto);
   }
 
   @Post('/signin')
