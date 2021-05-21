@@ -1,5 +1,6 @@
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, Unique } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { Role } from '../enums/user-role.enum';
 
 @Entity()
 @Unique(['username'])
@@ -8,7 +9,13 @@ export class User extends BaseEntity {
   id: number;
 
   @Column()
+  email: string;
+
+  @Column()
   username: string;
+
+  @Column()
+  role: Role;
 
   @Column()
   password: string;
