@@ -9,7 +9,9 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   database: process.env.DATABASE_NAME || 'tfmserver',
   entities: [__dirname + '/../**/*.entity.{js,ts}'],
   extra: {
-    ssl: { rejectUnauthorized: false },
+    ssl: process.env.NODE_ENV === 'production' 
+      ? { rejectUnauthorized: false }
+      : false,
   },
   synchronize: true,
 };
