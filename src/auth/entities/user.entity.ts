@@ -1,6 +1,7 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, Unique } from 'typeorm';
+import { BaseEntity, Column, Entity, ManyToMany, PrimaryGeneratedColumn, Unique } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Role } from '../enums/user-role.enum';
+import { Classroom } from 'src/classroom/entities/classroom.entity';
 
 @Entity()
 @Unique(['username'])
@@ -21,7 +22,10 @@ export class User extends BaseEntity {
   password: string;
 
   @Column()
-  salt: string;  
+  salt: string;
+
+  @ManyToMany(() => Classroom, classroom => classroom.teachers)
+  classrooms: Classroom[];
 
   async validatePassword(password: string): Promise<boolean> {
     const hash = await bcrypt.hash(password, this.salt);
