@@ -1,6 +1,5 @@
-import { User } from "src/auth/entities/user.entity";
+import { User } from "../../auth/entities/user.entity";
 import { BaseEntity, Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
-
 @Entity()
 export class Classroom extends BaseEntity {
     @PrimaryGeneratedColumn()

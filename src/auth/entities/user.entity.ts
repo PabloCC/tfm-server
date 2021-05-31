@@ -1,7 +1,7 @@
 import { BaseEntity, Column, Entity, ManyToMany, PrimaryGeneratedColumn, Unique } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Role } from '../enums/user-role.enum';
-import { Classroom } from 'src/classroom/entities/classroom.entity';
+import { Classroom } from '../../classroom/entities/classroom.entity';
 
 @Entity()
 @Unique(['username'])
