@@ -1,5 +1,7 @@
 import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { GetUser } from 'src/auth/decorators/get-user-decorator';
+import { User } from 'src/auth/entities/user.entity';
 import { ClassroomService } from './classroom.service';
 import { CreateClassroomDto } from './dto/create-classroom.dto';
 
@@ -14,8 +16,8 @@ export class ClassroomController {
   }
 
   @Get()
-  findAll() {
-    return this.classroomService.findAll();
+  findAll(@GetUser() user: User) {
+    return this.classroomService.findAll(user);
   }
 
   @Get(':id')
