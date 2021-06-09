@@ -29,4 +29,19 @@ export class ClassroomService {
   findOne(id: number) {
     return this.classroomRepository.findOne(id);
   }
+
+  async update(id: number, createClassroomDto: CreateClassroomDto) {
+    const classroom = await this.findOne(id);
+
+    classroom.name = createClassroomDto.name;
+    classroom.teachers = createClassroomDto.teachers;
+
+    await this.classroomRepository.save(classroom);
+    
+    return classroom;
+  }
+
+  remove(id: number) {
+    return this.classroomRepository.delete(id);
+  }
 }

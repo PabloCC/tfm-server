@@ -38,6 +38,11 @@ export class AuthService {
     return { accessToken };
   }
 
+
+  findOne(id: number) {
+    return this.userRepository.findOne(id);
+  }
+
   async getTeachers() {
     const users = await this.userRepository.find();
     return users.filter(user => user.role === Role.TEACHER);
@@ -51,5 +56,18 @@ export class AuthService {
   async getAdmins() {
     const users = await this.userRepository.find();
     return users.filter(user => user.role === Role.ADMIN);
+  }
+
+  async update(id: number, signupUserDto: SignupUserDto) {
+    let user = await this.findOne(id);
+    user = Object.assign(user, signupUserDto)
+
+    await this.userRepository.save(user);
+    
+    return user;
+  }
+
+  remove(id: number) {
+    return this.userRepository.delete(id);
   }
 }
