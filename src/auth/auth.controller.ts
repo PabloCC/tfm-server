@@ -30,7 +30,7 @@ export class AuthController {
     return this.authService.findOne(+id);
   }
 
-  @UseGuards(AuthGuard())
+  @UseGuards(AuthGuard('jwt'))
   @Get('/teachers')
   @ApiBearerAuth()
   getTeachers(@GetUser() user: User) {
@@ -41,7 +41,7 @@ export class AuthController {
     return this.authService.getTeachers();
   }
 
-  @UseGuards(AuthGuard())
+  @UseGuards(AuthGuard('jwt'))
   @Get('/families')
   @ApiBearerAuth()
   getFamilies(@GetUser() user: User) {
@@ -52,7 +52,7 @@ export class AuthController {
     return this.authService.getFamilies();
   }
 
-  @UseGuards(AuthGuard())
+  @UseGuards(AuthGuard('jwt'))
   @Get('/admins')
   @ApiBearerAuth()
   getAdmins(@GetUser() user: User) {

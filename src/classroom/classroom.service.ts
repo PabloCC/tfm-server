@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/auth/entities/user.entity';
-import { Role } from 'src/auth/enums/user-role.enum';
+import { User } from '../auth/entities/user.entity';
+import { Role } from '../auth/enums/user-role.enum';
 import { CreateClassroomDto } from './dto/create-classroom.dto';
 import { ClassroomRepository } from './repositories/classroom.repository';
 

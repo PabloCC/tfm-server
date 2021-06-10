@@ -1,14 +1,14 @@
 import { Controller, Get, Post, Body, Param, UseGuards, Put, Delete, UnauthorizedException } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
-import { GetUser } from 'src/auth/decorators/get-user-decorator';
-import { User } from 'src/auth/entities/user.entity';
-import { Role } from 'src/auth/enums/user-role.enum';
+import { GetUser } from '../auth/decorators/get-user-decorator';
+import { User } from '../auth/entities/user.entity';
+import { Role } from '../auth/enums/user-role.enum';
 import { ClassroomService } from './classroom.service';
 import { CreateClassroomDto } from './dto/create-classroom.dto';
 
 @Controller('classrooms')
-@UseGuards(AuthGuard())
+@UseGuards(AuthGuard('jwt'))
 @ApiTags('Classrooms')
 @ApiBearerAuth()
 export class ClassroomController {

@@ -8,6 +8,6 @@ export class CreateClassroomDto {
     @ApiProperty()
     name: string;
 
-    @ApiProperty()
+    @ApiProperty({type: User})
     teachers: User[];
 }
