@@ -23,6 +23,7 @@ export class AuthController {
     return this.authService.signIn(authCredentialsDto);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Get('users/:id')
   @ApiOkResponse()
   @ApiUnauthorizedResponse()
@@ -63,6 +64,7 @@ export class AuthController {
     return this.authService.getAdmins();
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Put('users/:id')
   @ApiOkResponse()
   @ApiUnauthorizedResponse()
@@ -74,6 +76,7 @@ export class AuthController {
     return this.authService.update(+id, signupUserDto);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Delete('users/:id')
   @ApiOkResponse()
   @ApiUnauthorizedResponse()

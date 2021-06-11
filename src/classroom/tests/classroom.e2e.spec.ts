@@ -1,134 +1,151 @@
 
 import * as request from 'supertest';
 import { Test } from '@nestjs/testing';
-import { ClassroomService } from '../classroom.service';
-import { ExecutionContext, INestApplication } from '@nestjs/common';
+import { INestApplication } from '@nestjs/common';
 import { ClassroomModule } from '../classroom.module';
-import { ClasssroomMockRepository } from './classroom.mock.repository';
-import { getRepositoryToken } from '@nestjs/typeorm';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { Classroom } from '../entities/classroom.entity';
-import { AppModule } from '../../app.module';
-import { AuthModule } from '../../auth/auth.module';
-import { AuthGuard } from '@nestjs/passport';
-import * as jwt from 'jsonwebtoken';
 import { Role } from '../../auth/enums/user-role.enum';
 import { JwtService } from '@nestjs/jwt';
+import { User } from "../../auth/entities/user.entity";
+import { getConnection } from "typeorm";
+
 
 describe('Classrooms', () => {
-  let app: INestApplication;
-  const classroomService = { 
-      findAll: () => ['test'],
-      findOne: () => 'test',
-      create: () => 'test',
-      update: () => 'test',
-      remove: () => 'test',
-    };
-  let token;
+    let app: INestApplication;
+    let token: string;
+    let userRepository;
 
-  beforeAll(async () => {
-    const moduleRef = await Test.createTestingModule({
-      imports: [
-          AppModule,
-          ClassroomModule,
-          AuthModule,
-        ],
-      providers: [
-        ClassroomService,
-        {
-            provide: getRepositoryToken(Classroom),
-            useValue: ClasssroomMockRepository,
-        }
-      ],
-    }).overrideProvider(ClassroomService)
-    .useValue(classroomService)
-    .compile();
-    
-    token = await new JwtService({
-        secret: 'topSecret',
-        signOptions: {
-          expiresIn: 3600,
-        }
-      }).sign( {
-        username: 'pepe',
-        email: 'pepe@pepe.com',
-        role: Role.ADMIN,
+    beforeAll(async () => {
+        const moduleRef = await Test.createTestingModule({
+            imports: [
+                ClassroomModule,
+                TypeOrmModule.forRoot({
+                    type: "sqlite",
+                    database: ":memory:",
+                    dropSchema: true,
+                    entities: [User, Classroom],
+                    synchronize: true,
+                    logging: false
+                })
+            ],
+        }).compile();
+
+
+        app = moduleRef.createNestApplication();
+        await app.init();
+
+        userRepository =  app.get('UserRepository');
+        await configAuth();
     });
 
-    app = moduleRef.createNestApplication();
-    await app.init();
-  });
+    
+    async function configAuth() {
+        const data = await userRepository.save([{
+            username: 'test',
+            email: 'test@email.com',
+            role: Role.ADMIN,
+            password: 'secret',
+            salt: 'salt'
+        }]);
 
-  it(`/GET classrooms`, () => {
-    return request(app.getHttpServer())
-      .get('/classrooms')
-      .set('Authorization', 'Bearer ' + token)
-      .expect(200)
-      .expect(classroomService.findAll());
-  });
+        const user = await userRepository.find({
+            where: {
+                id: data[0].id
+            }
+        });
 
-  it(`/GET classrooms unauthorized`, () => {
-    return request(app.getHttpServer())
-      .get('/classrooms')
-      .expect(401);
-  });
+        token = await new JwtService({
+            secret: 'topSecret',
+            signOptions: {
+                expiresIn: 3600,
+            }
+        }).sign({
+            id: user[0].id,
+            username: user[0].username,
+            email: user[0].email,
+            role: user[0].role,
+        });
+    }
 
-  it(`/GET one classrooms`, () => {
-    return request(app.getHttpServer())
-      .get('/classrooms/1')
-      .set('Authorization', 'Bearer ' + token)
-      .expect(200)
-      .expect(classroomService.findOne());
-  });
+    it(`/GET classrooms`, () => {
+        return request(app.getHttpServer())
+            .get('/classrooms')
+            .set('Authorization', 'Bearer ' + token)
+            .expect(200)
+            .expect([]);
+    });
 
-  it(`/GET one classroom unauthorized`, () => {
-    return request(app.getHttpServer())
-      .get('/classrooms/1')
-      .expect(401);
-  });
+    it(`/GET classrooms unauthorized`, () => {
+        return request(app.getHttpServer())
+            .get('/classrooms')
+            .expect(401);
+    });
 
-  it(`/POST one classrooms`, () => {
-    return request(app.getHttpServer())
-      .post('/classrooms')
-      .set('Authorization', 'Bearer ' + token)
-      .expect(201)
-      .expect(classroomService.create());
-  });
+    it(`/GET one classrooms`, () => {
+        return request(app.getHttpServer())
+            .get('/classrooms/1')
+            .set('Authorization', 'Bearer ' + token)
+            .expect(200)
+            .expect({});
+    });
 
-  it(`/POST one classroom unauthorized`, () => {
-    return request(app.getHttpServer())
-      .post('/classrooms')
-      .expect(401);
-  });
+    it(`/GET one classroom unauthorized`, () => {
+        return request(app.getHttpServer())
+            .get('/classrooms/1')
+            .expect(401);
+    });
 
-  it(`/PUT one classrooms`, () => {
-    return request(app.getHttpServer())
-      .put('/classrooms/1')
-      .set('Authorization', 'Bearer ' + token)
-      .expect(200)
-      .expect(classroomService.update());
-  });
+    it(`/POST one classrooms`, () => {
+        return request(app.getHttpServer())
+            .post('/classrooms')
+            .set('Authorization', 'Bearer ' + token)
+            .send({name: 'test', teachers: []})
+            .expect(201)
+            .expect({ id: 1, name: 'test', teachers: [] });
+    });
 
-  it(`/PUT one classroom unauthorized`, () => {
-    return request(app.getHttpServer())
-      .put('/classrooms/1')
-      .expect(401);
-  });
+    it(`/POST one classroom unauthorized`, () => {
+        return request(app.getHttpServer())
+            .post('/classrooms')
+            .send({name: 'test', teachers: []})
+            .expect(401);
+    });
 
-  it(`/DELETE one classrooms`, () => {
-    return request(app.getHttpServer())
-      .delete('/classrooms/1')
-      .set('Authorization', 'Bearer ' + token)
-      .expect(200)
-      .expect(classroomService.remove());
-  });
+    it(`/PUT one classrooms`, () => {
+        return request(app.getHttpServer())
+            .put('/classrooms/1')
+            .set('Authorization', 'Bearer ' + token)
+            .send({name: 'test', teachers: []})
+            .expect(200)
+            .expect({ id: 1, name: 'test', teachers: [] });
+    });
 
-  it(`/DELETE one classroom unauthorized`, () => {
-    return request(app.getHttpServer())
-      .delete('/classrooms/1')
-      .expect(401);
-  });
+    it(`/PUT one classroom unauthorized`, () => {
+        return request(app.getHttpServer())
+            .put('/classrooms/1')
+            .send({name: 'test', teachers: []})
+            .expect(401);
+    });
 
-  afterAll(async () => {
-    await app.close();
-  });
+    it(`/DELETE one classrooms`, () => {
+        return request(app.getHttpServer())
+            .delete('/classrooms/1')
+            .set('Authorization', 'Bearer ' + token)
+            .expect(200)
+            .expect({ raw: [] });
+    });
+
+    it(`/DELETE one classroom unauthorized`, () => {
+        return request(app.getHttpServer())
+            .delete('/classrooms/1')
+            .expect(401);
+    });
+
+    afterAll(async () => {
+        userRepository.clear();
+        const conn = await getConnection();
+        await conn.close();
+        await app.close();
+    });
 });

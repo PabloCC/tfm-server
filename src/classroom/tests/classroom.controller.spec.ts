@@ -13,9 +13,9 @@ import { UnauthorizedException } from '@nestjs/common';
 describe('ClassroomController', () => {
   let controller: ClassroomController;
   let service: ClassroomService;
-
+  let module: TestingModule;
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
       imports: [PassportModule],
       controllers: [ClassroomController],
       providers: [
@@ -125,4 +125,9 @@ describe('ClassroomController', () => {
       expect(()=> { controller.remove("1", mockUser) }).toThrowError(unauthorized);
     });
   });
+
+  afterEach(async () => {
+    await module.close();
+  });
+
 });
