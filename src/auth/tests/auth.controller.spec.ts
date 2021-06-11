@@ -1,6 +1,6 @@
 import { PassportModule } from '@nestjs/passport';
 import { Test, TestingModule } from '@nestjs/testing';
-import { getRepositoryToken } from '@nestjs/typeorm';
+import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../entities/user.entity';
 import { UserMockRepository } from './user.mock.repository';
 import { AuthController } from '../auth.controller';
@@ -10,6 +10,7 @@ import { AppModule } from '../../app.module';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { Role } from '../enums/user-role.enum';
 import { AuthCredentialsDto } from '../dto/auth-credentials.dto';
+import { Classroom } from '../../classroom/entities/classroom.entity';
 
 
 describe('AuthController', () => {
@@ -19,12 +20,21 @@ describe('AuthController', () => {
 
   beforeEach(async () => {
     module = await Test.createTestingModule({
-      imports: [AppModule, AuthModule, PassportModule,  JwtModule.register({
+      imports: [AuthModule,  JwtModule.register({
         secret: 'topSecret',
         signOptions: {
           expiresIn: 3600,
         }
-      })],
+      }),
+      TypeOrmModule.forRoot({
+        type: "sqlite",
+        database: ":memory:",
+        dropSchema: true,
+        entities: [User, Classroom],
+        synchronize: true,
+        logging: false
+    })
+      ],
       controllers: [AuthController],
       providers: [
         AuthService,
