@@ -1,4 +1,3 @@
-import { PassportModule } from '@nestjs/passport';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 import { Role } from '../../auth/enums/user-role.enum';
@@ -10,6 +9,7 @@ import { Classroom } from '../entities/classroom.entity';
 import { ClasssroomMockRepository } from './classroom.mock.repository';
 import { UnauthorizedException } from '@nestjs/common';
 import { ClassroomModule } from '../classroom.module';
+import { Student } from '../../student/entities/student.entity';
 
 describe('ClassroomController', () => {
   let controller: ClassroomController;
@@ -23,7 +23,7 @@ describe('ClassroomController', () => {
           type: "sqlite",
           database: ":memory:",
           dropSchema: true,
-          entities: [User, Classroom],
+          entities: [Student, User, Classroom],
           synchronize: true,
           logging: false
       })

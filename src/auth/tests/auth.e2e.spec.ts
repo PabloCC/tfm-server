@@ -10,8 +10,9 @@ import { getConnection } from "typeorm";
 import { AuthModule } from '../auth.module';
 import { Classroom } from '../../classroom/entities/classroom.entity';
 import * as bcrypt from 'bcrypt';
+import { Student } from '../../student/entities/student.entity';
 
-describe('Classrooms', () => {
+describe('Auth', () => {
   let app: INestApplication;
   let token: string;
   let userRepository;
@@ -24,7 +25,7 @@ describe('Classrooms', () => {
           type: "sqlite",
           database: ":memory:",
           dropSchema: true,
-          entities: [User, Classroom],
+          entities: [User, Classroom, Student],
           synchronize: true,
           logging: false
         })

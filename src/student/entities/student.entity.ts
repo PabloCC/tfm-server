@@ -1,4 +1,5 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Classroom } from "../../classroom/entities/classroom.entity";
+import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Student extends BaseEntity {
@@ -11,4 +12,6 @@ export class Student extends BaseEntity {
     @Column()
     birthdate: Date
   
+    @ManyToOne(() => Classroom, classroom => classroom.students, { eager: false })
+    classroom: Classroom
 }
