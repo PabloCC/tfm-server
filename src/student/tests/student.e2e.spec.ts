@@ -2,24 +2,28 @@
 import * as request from 'supertest';
 import { Test } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import { ClassroomModule } from '../classroom.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Classroom } from '../entities/classroom.entity';
+import { Classroom } from '../../classroom/entities/classroom.entity';
 import { Role } from '../../auth/enums/user-role.enum';
 import { JwtService } from '@nestjs/jwt';
 import { User } from "../../auth/entities/user.entity";
 import { getConnection } from "typeorm";
 import { Student } from '../../student/entities/student.entity';
+import { StudentModule } from '../student.module';
+import { ClassroomModule } from '../../classroom/classroom.module';
 
 
-describe('Classrooms', () => {
+describe('Students', () => {
     let app: INestApplication;
     let token: string;
     let userRepository;
+    let classroomRepository;
+    let classroom: Classroom;
 
     beforeAll(async () => {
         const moduleRef = await Test.createTestingModule({
             imports: [
+                StudentModule,
                 ClassroomModule,
                 TypeOrmModule.forRoot({
                     type: "sqlite",
@@ -36,16 +40,23 @@ describe('Classrooms', () => {
         app = moduleRef.createNestApplication();
         await app.init();
 
-        userRepository =  app.get('UserRepository');
+        userRepository = app.get('UserRepository');
+        classroomRepository = app.get('ClassroomRepository');
         await configAuth();
+
+        classroom = await classroomRepository.save([{
+            name: 'Test',
+            stage: 1,
+            teachers: [],
+        }]);
     });
 
-    
+
     async function configAuth() {
         const data = await userRepository.save([{
             username: 'test',
             email: 'test@email.com',
-            role: Role.ADMIN,
+            role: Role.TEACHER,
             password: 'secret',
             salt: 'salt'
         }]);
@@ -69,77 +80,104 @@ describe('Classrooms', () => {
         });
     }
 
-    it(`/GET classrooms`, () => {
+    it(`/GET students`, () => {
         return request(app.getHttpServer())
-            .get('/classrooms')
+            .get('/students')
             .set('Authorization', 'Bearer ' + token)
             .expect(200)
             .expect([]);
     });
 
-    it(`/GET classrooms unauthorized`, () => {
+    it(`/GET students unauthorized`, () => {
         return request(app.getHttpServer())
-            .get('/classrooms')
+            .get('/students')
             .expect(401);
     });
 
-    it(`/GET one classrooms`, () => {
+    it(`/GET one student`, () => {
         return request(app.getHttpServer())
-            .get('/classrooms/1')
+            .get('/students/1')
             .set('Authorization', 'Bearer ' + token)
             .expect(200)
             .expect({});
     });
 
-    it(`/GET one classroom unauthorized`, () => {
+    it(`/GET one student unauthorized`, () => {
         return request(app.getHttpServer())
-            .get('/classrooms/1')
+            .get('/students/1')
             .expect(401);
     });
 
-    it(`/POST one classrooms`, () => {
+    it(`/POST one student`, () => {
         return request(app.getHttpServer())
-            .post('/classrooms')
+            .post('/students')
             .set('Authorization', 'Bearer ' + token)
-            .send({name: 'test', stage: 1, teachers: []})
+            .send({ name: 'test', birthdate: '2020-09-03', classroom: classroom[0] })
             .expect(201)
-            .expect({ id: 1, name: 'test', stage: 1, teachers: []});
+            .expect({
+                name: 'test',
+                birthdate: '2020-09-03',
+                classroom: { name: 'Test', stage: 1, teachers: [], id: 1 },
+                id: 1
+            });
     });
 
-    it(`/POST one classroom unauthorized`, () => {
+    it(`/POST one student unauthorized`, () => {
         return request(app.getHttpServer())
-            .post('/classrooms')
-            .send({name: 'test', stage: 1, teachers: []})
+            .post('/students')
+            .send({ name: 'test', birthdate: '2020-09-03', classroom: classroom[0] })
             .expect(401);
+    });
+
+    it(`/POST one student fake date`, () => {
+        return request(app.getHttpServer())
+            .post('/students')
+            .set('Authorization', 'Bearer ' + token)
+            .send({ name: 'test', birthdate: '2050-09-03', classroom: classroom[0] })
+            .expect(403);
+    });
+
+    it(`/POST one student wrong classroomm stage`, () => {
+        return request(app.getHttpServer())
+            .post('/students')
+            .set('Authorization', 'Bearer ' + token)
+            .send({ name: 'test', birthdate: '2021-03-03', classroom: classroom[0] })
+            .expect(403);
     });
 
     it(`/PUT one classrooms`, () => {
         return request(app.getHttpServer())
-            .put('/classrooms/1')
+            .put('/students/1')
             .set('Authorization', 'Bearer ' + token)
-            .send({name: 'test', stage: 1, teachers: []})
+            .send({ name: 'test2', birthdate: '2020-09-03', classroom: classroom[0] })
             .expect(200)
-            .expect({ id: 1, name: 'test', stage: 1, teachers: [], students: [] });
+            .expect({
+                id: 1,
+                name: 'test2',
+                birthdate: '2020-09-03',
+                classroom: { name: 'Test', stage: 1, teachers: [], id: 1 },
+                parents: [],
+            });
     });
 
-    it(`/PUT one classroom unauthorized`, () => {
+    it(`/PUT one student unauthorized`, () => {
         return request(app.getHttpServer())
-            .put('/classrooms/1')
-            .send({name: 'test', stage: 1, teachers: []})
+            .put('/students/1')
+            .send({ name: 'test2', birthdate: '2020-09-03', classroom: classroom[0] })
             .expect(401);
     });
 
-    it(`/DELETE one classrooms`, () => {
+    it(`/DELETE one student`, () => {
         return request(app.getHttpServer())
-            .delete('/classrooms/1')
+            .delete('/students/1')
             .set('Authorization', 'Bearer ' + token)
             .expect(200)
             .expect({ raw: [] });
     });
 
-    it(`/DELETE one classroom unauthorized`, () => {
+    it(`/DELETE one student unauthorized`, () => {
         return request(app.getHttpServer())
-            .delete('/classrooms/1')
+            .delete('/students/1')
             .expect(401);
     });
 
