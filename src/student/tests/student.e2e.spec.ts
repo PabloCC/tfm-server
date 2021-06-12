@@ -40,7 +40,7 @@ describe('Students', () => {
         app = moduleRef.createNestApplication();
         await app.init();
 
-        userRepository =  app.get('UserRepository');
+        userRepository = app.get('UserRepository');
         classroomRepository = app.get('ClassroomRepository');
         await configAuth();
 
@@ -48,10 +48,10 @@ describe('Students', () => {
             name: 'Test',
             stage: 1,
             teachers: [],
-        }])[0];
+        }]);
     });
 
-    
+
     async function configAuth() {
         const data = await userRepository.save([{
             username: 'test',
@@ -112,31 +112,57 @@ describe('Students', () => {
         return request(app.getHttpServer())
             .post('/students')
             .set('Authorization', 'Bearer ' + token)
-            .send({name: 'test', birthdate: '2020-03-03', classroom: JSON.stringify(classroom)})
+            .send({ name: 'test', birthdate: '2020-09-03', classroom: classroom[0] })
             .expect(201)
-            .expect({name: 'test', birthdate: '2020-03-03', id: 1});
+            .expect({
+                name: 'test',
+                birthdate: '2020-09-03',
+                classroom: { name: 'Test', stage: 1, teachers: [], id: 1 },
+                id: 1
+            });
     });
 
     it(`/POST one student unauthorized`, () => {
         return request(app.getHttpServer())
             .post('/students')
-            .send({name: 'test', birthdate: '2020-03-03', classroom: JSON.stringify(classroom)})
+            .send({ name: 'test', birthdate: '2020-09-03', classroom: classroom[0] })
             .expect(401);
+    });
+
+    it(`/POST one student fake date`, () => {
+        return request(app.getHttpServer())
+            .post('/students')
+            .set('Authorization', 'Bearer ' + token)
+            .send({ name: 'test', birthdate: '2050-09-03', classroom: classroom[0] })
+            .expect(403);
+    });
+
+    it(`/POST one student wrong classroomm stage`, () => {
+        return request(app.getHttpServer())
+            .post('/students')
+            .set('Authorization', 'Bearer ' + token)
+            .send({ name: 'test', birthdate: '2021-03-03', classroom: classroom[0] })
+            .expect(403);
     });
 
     it(`/PUT one classrooms`, () => {
         return request(app.getHttpServer())
             .put('/students/1')
             .set('Authorization', 'Bearer ' + token)
-            .send({name: 'test2', birthdate: '2020-03-03', classroom: JSON.stringify(classroom)})
+            .send({ name: 'test2', birthdate: '2020-09-03', classroom: classroom[0] })
             .expect(200)
-            .expect({name: 'test2', birthdate: '2020-03-03', id: 1});
+            .expect({
+                id: 1,
+                name: 'test2',
+                birthdate: '2020-09-03',
+                classroom: { name: 'Test', stage: 1, teachers: [], id: 1 }
+            });
     });
 
     it(`/PUT one student unauthorized`, () => {
         return request(app.getHttpServer())
             .put('/students/1')
-            .send({name: 'test2', birthdate: '2020-03-03', classroom: JSON.stringify(classroom)})
+            .send({ name: 'test2', birthdate: '2020-09-03', classroom: classroom[0] })
             .expect(401);
     });
 
