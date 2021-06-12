@@ -56,7 +56,7 @@ describe('Students', () => {
         const data = await userRepository.save([{
             username: 'test',
             email: 'test@email.com',
-            role: Role.ADMIN,
+            role: Role.TEACHER,
             password: 'secret',
             salt: 'salt'
         }]);
@@ -155,7 +155,8 @@ describe('Students', () => {
                 id: 1,
                 name: 'test2',
                 birthdate: '2020-09-03',
-                classroom: { name: 'Test', stage: 1, teachers: [], id: 1 }
+                classroom: { name: 'Test', stage: 1, teachers: [], id: 1 },
+                parents: [],
             });
     });
 

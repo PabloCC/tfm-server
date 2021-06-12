@@ -46,8 +46,8 @@ export class StudentRepository extends Repository<Student> {
             if (student.classroom.stage !== +(daysdiff / 365).toFixed()) {
                 throw new ForbiddenException('La edad del alumno no coincide con el nivel del aula.');
             }
-        }  else {
-            throw new ForbiddenException('La edad del alumno no puede ser superior a la actual');
+        } else {
+            throw new ForbiddenException('La fecha de nacimiento no puede ser superior a la actual');
         }
     }
 }

@@ -1,5 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsDateString, IsString, MaxLength, MinLength } from "class-validator";
+import { User } from "../../auth/entities/user.entity";
+import { Classroom } from "../../classroom/entities/classroom.entity";
 
 export class CreateStudentDto {
     @IsString()
@@ -11,4 +13,10 @@ export class CreateStudentDto {
     @IsDateString()
     @ApiProperty()
     birthdate: Date;
+
+    @ApiProperty()
+    classroom?: Classroom;
+
+    @ApiProperty()
+    parents?: User[];
 }

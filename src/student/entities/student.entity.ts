@@ -1,5 +1,6 @@
 import { Classroom } from "../../classroom/entities/classroom.entity";
-import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinTable, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { User } from "../../auth/entities/user.entity";
 
 @Entity()
 export class Student extends BaseEntity {
@@ -14,4 +15,8 @@ export class Student extends BaseEntity {
   
     @ManyToOne(() => Classroom, classroom => classroom.students, { eager: false })
     classroom: Classroom
+
+    @OneToMany(() => User, user => user.student, {eager: true})
+    @JoinTable()    
+    parents: User[]
 }
