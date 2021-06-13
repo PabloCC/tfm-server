@@ -5,13 +5,14 @@ import { AuthModule } from './auth/auth.module';
 import { ClassroomModule } from './classroom/classroom.module';
 import { StudentModule } from './student/student.module';
 import { NoteModule } from './note/note.module';
+import { PublicationModule } from './publication/publication.module';
 @Global()
 @Module({
   imports: [
     TypeOrmModule.forRoot(typeOrmConfig), 
     AuthModule, 
     ClassroomModule, 
-    StudentModule, NoteModule
+    StudentModule, NoteModule, PublicationModule
   ],
 })
 export class AppModule {}

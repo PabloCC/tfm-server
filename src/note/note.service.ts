@@ -13,9 +13,8 @@ export class NoteService {
     return this.noteRepository.createNote(createNoteDto);
   }
 
-  async findAll() {
-    const students = await this.noteRepository.find();
-    return students;
+  findAll() {
+    return this.noteRepository.find();;
   }
 
   findOne(id: number) {

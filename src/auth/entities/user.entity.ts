@@ -6,6 +6,7 @@ import { Exclude } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import { Student } from '../../student/entities/student.entity';
 import { Note } from '../../note/entities/note.entity';
+import { Publication } from '../../publication/entities/publication.entity';
 
 @Entity()
 @Unique(['username'])
@@ -47,6 +48,9 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Note, note => note.target)
   notesReceived?: Note[];
+
+  @OneToMany(() => Publication, publication => publication.author)
+  publications?: Publication[];
 
   async validatePassword(password: string): Promise<boolean> {
     const hash = await bcrypt.hash(password, this.salt);
