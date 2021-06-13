@@ -1,4 +1,3 @@
-import { PassportModule } from '@nestjs/passport';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 import { Role } from '../../auth/enums/user-role.enum';
@@ -10,6 +9,7 @@ import { Classroom } from '../entities/classroom.entity';
 import { ClasssroomMockRepository } from './classroom.mock.repository';
 import { UnauthorizedException } from '@nestjs/common';
 import { ClassroomModule } from '../classroom.module';
+import { typeOrmTestConfig } from '../../config/typeorm.test.config';
 
 describe('ClassroomController', () => {
   let controller: ClassroomController;
@@ -19,14 +19,7 @@ describe('ClassroomController', () => {
     module = await Test.createTestingModule({
       imports: [
         ClassroomModule,
-        TypeOrmModule.forRoot({
-          type: "sqlite",
-          database: ":memory:",
-          dropSchema: true,
-          entities: [User, Classroom],
-          synchronize: true,
-          logging: false
-      })
+        TypeOrmModule.forRoot(typeOrmTestConfig)
       ],
       controllers: [ClassroomController],
       providers: [
