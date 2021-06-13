@@ -12,11 +12,11 @@ export class Classroom extends BaseEntity {
     @Column()
     stage: number;
 
-    @ManyToMany(() => User, user => user.classrooms, {eager: true})
+    @ManyToMany(() => User, user => user.classrooms, {eager: true, onDelete: 'CASCADE'})
     @JoinTable()
     teachers: User[];
 
-    @OneToMany(() => Student, student => student.classroom, {eager: true})
+    @OneToMany(() => Student, student => student.classroom, {eager: true, onDelete: 'CASCADE'})
     @JoinTable()
     students: Student[];
 }

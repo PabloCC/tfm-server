@@ -5,12 +5,10 @@ import { INestApplication } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Role } from '../../auth/enums/user-role.enum';
 import { JwtService } from '@nestjs/jwt';
-import { User } from "../../auth/entities/user.entity";
 import { getConnection } from "typeorm";
 import { AuthModule } from '../auth.module';
-import { Classroom } from '../../classroom/entities/classroom.entity';
 import * as bcrypt from 'bcrypt';
-import { Student } from '../../student/entities/student.entity';
+import { typeOrmTestConfig } from '../../config/typeOrmTestConfig';
 
 describe('Auth', () => {
   let app: INestApplication;
@@ -21,14 +19,7 @@ describe('Auth', () => {
     const moduleRef = await Test.createTestingModule({
       imports: [
         AuthModule,
-        TypeOrmModule.forRoot({
-          type: "sqlite",
-          database: ":memory:",
-          dropSchema: true,
-          entities: [User, Classroom, Student],
-          synchronize: true,
-          logging: false
-        })
+        TypeOrmModule.forRoot(typeOrmTestConfig)
       ],
     }).compile();
 

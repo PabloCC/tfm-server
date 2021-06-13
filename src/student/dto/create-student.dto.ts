@@ -14,9 +14,9 @@ export class CreateStudentDto {
     @ApiProperty()
     birthdate: Date;
 
-    @ApiProperty()
+    @ApiProperty({type: Classroom})
     classroom?: Classroom;
 
-    @ApiProperty()
+    @ApiProperty({type: User})
     parents?: User[];
 }
