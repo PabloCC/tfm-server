@@ -8,8 +8,7 @@ import { AuthModule } from '../auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import { Role } from '../enums/user-role.enum';
 import { AuthCredentialsDto } from '../dto/auth-credentials.dto';
-import { Classroom } from '../../classroom/entities/classroom.entity';
-import { Student } from '../../student/entities/student.entity';
+import { typeOrmTestConfig } from '../../config/typeOrmTestConfig';
 
 
 describe('AuthController', () => {
@@ -25,14 +24,7 @@ describe('AuthController', () => {
           expiresIn: 3600,
         }
       }),
-      TypeOrmModule.forRoot({
-        type: "sqlite",
-        database: ":memory:",
-        dropSchema: true,
-        entities: [User, Classroom, Student],
-        synchronize: true,
-        logging: false
-    })
+      TypeOrmModule.forRoot(typeOrmTestConfig)
       ],
       controllers: [AuthController],
       providers: [

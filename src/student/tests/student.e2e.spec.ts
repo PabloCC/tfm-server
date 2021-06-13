@@ -6,11 +6,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Classroom } from '../../classroom/entities/classroom.entity';
 import { Role } from '../../auth/enums/user-role.enum';
 import { JwtService } from '@nestjs/jwt';
-import { User } from "../../auth/entities/user.entity";
 import { getConnection } from "typeorm";
-import { Student } from '../../student/entities/student.entity';
 import { StudentModule } from '../student.module';
 import { ClassroomModule } from '../../classroom/classroom.module';
+import { typeOrmTestConfig } from '../../config/typeOrmTestConfig';
 
 
 describe('Students', () => {
@@ -25,14 +24,7 @@ describe('Students', () => {
             imports: [
                 StudentModule,
                 ClassroomModule,
-                TypeOrmModule.forRoot({
-                    type: "sqlite",
-                    database: ":memory:",
-                    dropSchema: true,
-                    entities: [Student, User, Classroom],
-                    synchronize: true,
-                    logging: false
-                })
+                TypeOrmModule.forRoot(typeOrmTestConfig)
             ],
         }).compile();
 

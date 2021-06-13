@@ -3,13 +3,13 @@ import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 import { Role } from '../../auth/enums/user-role.enum';
 import { DeleteResult } from 'typeorm';
 import { User } from '../../auth/entities/user.entity';
-import { Classroom } from '../../classroom/entities/classroom.entity';
 import { Student } from '../entities/student.entity';
 import { StudentController } from '../student.controller';
 import { StudentModule } from '../student.module';
 import { StudentService } from '../student.service';
 import { StudentMockRepository } from './student.mock.repository';
 import { UnauthorizedException } from '@nestjs/common';
+import { typeOrmTestConfig } from '../../config/typeOrmTestConfig';
 
 describe('StudentController', () => {
   let controller: StudentController;
@@ -20,14 +20,7 @@ describe('StudentController', () => {
     module = await Test.createTestingModule({
       imports: [
         StudentModule,
-        TypeOrmModule.forRoot({
-          type: "sqlite",
-          database: ":memory:",
-          dropSchema: true,
-          entities: [Student, User, Classroom],
-          synchronize: true,
-          logging: false
-      })
+        TypeOrmModule.forRoot(typeOrmTestConfig)
       ],
       controllers: [StudentController],
       providers: [
