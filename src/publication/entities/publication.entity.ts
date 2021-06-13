@@ -15,6 +15,6 @@ export class Publication extends BaseEntity {
     @Column()
     date: Date;
 
-    @ManyToOne(() => User, user => user.publications, {onDelete: 'CASCADE'}) 
+    @ManyToOne(() => User, user => user.publications, {onDelete: 'CASCADE', eager: true})
     author: User;
 }
