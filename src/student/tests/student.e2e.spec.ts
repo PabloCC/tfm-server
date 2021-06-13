@@ -9,7 +9,7 @@ import { JwtService } from '@nestjs/jwt';
 import { getConnection } from "typeorm";
 import { StudentModule } from '../student.module';
 import { ClassroomModule } from '../../classroom/classroom.module';
-import { typeOrmTestConfig } from '../../config/typeOrmTestConfig';
+import { typeOrmTestConfig } from '../../config/typeorm.test.config';
 
 
 describe('Students', () => {

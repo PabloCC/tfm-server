@@ -7,7 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Role } from '../../auth/enums/user-role.enum';
 import { JwtService } from '@nestjs/jwt';
 import { getConnection } from "typeorm";
-import { typeOrmTestConfig } from '../../config/typeOrmTestConfig';
+import { typeOrmTestConfig } from '../../config/typeorm.test.config';
 
 
 describe('Classrooms', () => {

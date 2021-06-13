@@ -8,7 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import { getConnection } from "typeorm";
 import { AuthModule } from '../auth.module';
 import * as bcrypt from 'bcrypt';
-import { typeOrmTestConfig } from '../../config/typeOrmTestConfig';
+import { typeOrmTestConfig } from '../../config/typeorm.test.config';
 
 describe('Auth', () => {
   let app: INestApplication;

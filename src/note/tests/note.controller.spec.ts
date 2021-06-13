@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
-import { typeOrmTestConfig } from '../../config/typeOrmTestConfig';
-import { DeleteResult } from 'typeorm';
+import { typeOrmTestConfig } from '../../config/typeorm.test.config';
 import { Note } from '../entities/note.entity';
 import { NoteController } from '../note.controller';
 import { NoteModule } from '../note.module';
@@ -66,7 +65,7 @@ describe('NoteController', () => {
       expect(await controller.create(note)).toStrictEqual(result);
     });
   });
-  
+
   afterEach(async () => {
     await module.close();
   });

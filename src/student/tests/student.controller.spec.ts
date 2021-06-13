@@ -9,7 +9,7 @@ import { StudentModule } from '../student.module';
 import { StudentService } from '../student.service';
 import { StudentMockRepository } from './student.mock.repository';
 import { UnauthorizedException } from '@nestjs/common';
-import { typeOrmTestConfig } from '../../config/typeOrmTestConfig';
+import { typeOrmTestConfig } from '../../config/typeorm.test.config';
 
 describe('StudentController', () => {
   let controller: StudentController;

@@ -8,7 +8,7 @@ import { AuthModule } from '../auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import { Role } from '../enums/user-role.enum';
 import { AuthCredentialsDto } from '../dto/auth-credentials.dto';
-import { typeOrmTestConfig } from '../../config/typeOrmTestConfig';
+import { typeOrmTestConfig } from '../../config/typeorm.test.config';
 
 
 describe('AuthController', () => {

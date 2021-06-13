@@ -9,7 +9,7 @@ import { Classroom } from '../entities/classroom.entity';
 import { ClasssroomMockRepository } from './classroom.mock.repository';
 import { UnauthorizedException } from '@nestjs/common';
 import { ClassroomModule } from '../classroom.module';
-import { typeOrmTestConfig } from '../../config/typeOrmTestConfig';
+import { typeOrmTestConfig } from '../../config/typeorm.test.config';
 
 describe('ClassroomController', () => {
   let controller: ClassroomController;
