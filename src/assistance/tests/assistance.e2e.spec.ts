@@ -6,28 +6,34 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Role } from '../../auth/enums/user-role.enum';
 import { JwtService } from '@nestjs/jwt';
 import { getConnection } from "typeorm";
-import { GoalModule } from '../goal.module';
+import { AssistanceModule } from '../assistance.module';
 import { typeOrmTestConfig } from '../../config/typeorm.test.config';
 import { Classroom } from '../../classroom/entities/classroom.entity';
 import { ClassroomModule } from '../../classroom/classroom.module';
 import { User } from '../../auth/entities/user.entity';
+import { Student } from '../../student/entities/student.entity';
+import { StudentModule } from '../../student/student.module';
 
 
-describe('Goals', () => {
+describe('Assistances', () => {
     let app: INestApplication;
     let token: string;
     let token2: string;
     let userRepository;
     let classroomRepository;
+    let studentRepository;
     let classroom: Classroom;
     let user: User;
     let user2: User;
+    let student: Student;
+
 
     beforeAll(async () => {
         const moduleRef = await Test.createTestingModule({
             imports: [
-                GoalModule,
+                AssistanceModule,
                 ClassroomModule,
+                StudentModule,
                 TypeOrmModule.forRoot(typeOrmTestConfig)
             ],
         }).compile();
@@ -45,6 +51,13 @@ describe('Goals', () => {
             name: 'Test',
             stage: 1,
             teachers: [user[0]]
+        }]);
+        
+        studentRepository = app.get('StudentRepository');
+        student = await studentRepository.save([{
+            name: 'Pablo',
+            birthdate: new Date(),
+            classroom: classroom[0],
         }]);
     });
 
@@ -96,107 +109,107 @@ describe('Goals', () => {
         });
     }
 
-    it(`/GET goals`, () => {
+    it(`/GET assistances`, () => {
         return request(app.getHttpServer())
-            .get('/goals')
+            .get('/assistances')
             .set('Authorization', 'Bearer ' + token)
             .expect(200)
             .expect([]);
     });
 
-    it(`/GET goals unauthorized`, () => {
+    it(`/GET assistances unauthorized`, () => {
         return request(app.getHttpServer())
-            .get('/goals')
+            .get('/assistances')
             .expect(401);
     });
 
-    it(`/GET one goal`, () => {
+    it(`/GET one assistance`, () => {
         return request(app.getHttpServer())
-            .get('/goals/1')
+            .get('/assistances/1')
             .set('Authorization', 'Bearer ' + token)
             .expect(200)
             .expect({});
     });
 
-    it(`/GET one goal unauthorized`, () => {
+    it(`/GET one assistance unauthorized`, () => {
         return request(app.getHttpServer())
-            .get('/goals/1')
+            .get('/assistances/1')
             .expect(401);
     });
 
-    it(`/POST one goal`, () => {
+    it(`/POST one assistance`, () => {
         return request(app.getHttpServer())
-            .post('/goals')
+            .post('/assistances')
             .set('Authorization', 'Bearer ' + token)
-            .send({ name: 'test', classroom: classroom[0]})
+            .send({ date: '2020-09-09', isPresent: true, student: student[0]})
             .expect(201)
     });
 
-    it(`/POST one goal unauthorized`, () => {
+    it(`/POST one assistance unauthorized`, () => {
         return request(app.getHttpServer())
-            .post('/goals')
-            .send({ name: 'test', classroom: classroom[0]})
+            .post('/assistances')
+            .send({ date: '2020-09-09', isPresent: true, student: student[0]})
             .expect(401);
     });
 
 
-    it(`/PUT one goal`, () => {
+    it(`/PUT one assistance`, () => {
         return request(app.getHttpServer())
-            .put('/goals/1')
+            .put('/assistances/1')
             .set('Authorization', 'Bearer ' + token)
-            .send({ name: 'test', classroom: classroom[0]})
+            .send({ date: '2020-09-09', isPresent: true, student: student[0]})
             .expect(200)
     });
 
-    it(`/PUT one goal unauthorized`, () => {
+    it(`/PUT one assistance unauthorized`, () => {
         return request(app.getHttpServer())
-            .put('/goals/1')
-            .send({ name: 'test', classroom: classroom[0]})
+            .put('/assistances/1')
+            .send({ date: '2020-09-09', isPresent: true, student: student[0]})
             .expect(401);
     });
 
-    it(`/PUT one goal forbidden`, () => {
+    it(`/PUT one assistance forbidden`, () => {
         return request(app.getHttpServer())
-            .put('/goals/1')
+            .put('/assistances/1')
             .set('Authorization', 'Bearer ' + token2)
-            .send({ name: 'test', classroom: classroom[0]})
+            .send({ date: '2020-09-09', isPresent: true, student: student[0]})
             .expect(403);
     });
 
-    it(`/PUT one goal not found`, () => {
+    it(`/PUT one assistance not found`, () => {
         return request(app.getHttpServer())
-            .put('/goals/99')
+            .put('/assistances/99')
             .set('Authorization', 'Bearer ' + token2)
-            .send({ name: 'test', classroom: classroom[0]})
+            .send({ date: '2020-09-09', isPresent: true, student: student[0]})
             .expect(404);
     });
 
-    it(`/DELETE one goal`, () => {
+    it(`/DELETE one assistance`, () => {
         return request(app.getHttpServer())
-            .delete('/goals/1')
+            .delete('/assistances/1')
             .set('Authorization', 'Bearer ' + token)
             .expect(200)
             .expect({ raw: [] });
     });
 
-    it(`/DELETE one goal unauthorized`, () => {
+    it(`/DELETE one assistance unauthorized`, () => {
         return request(app.getHttpServer())
-            .delete('/goals/1')
+            .delete('/assistances/1')
             .expect(401);
     });
 
-    it(`/DELETE one goal forbidden`, async () => {
-        const goal = await app.get('GoalRepository').save([{ name: 'test', classroom: classroom[0]}]);
+    it(`/DELETE one assistance forbidden`, async () => {
+        const assistance = await app.get('AssistanceRepository').save([{ date: '2020-09-09', isPresent: true, student: student[0]}]);
 
         return request(app.getHttpServer())
-            .delete('/goals/' + goal[0].id)
+            .delete('/assistances/' + assistance[0].id)
             .set('Authorization', 'Bearer ' + token2)
             .expect(403);
     });
 
-    it(`/DELETE one goal not found`, async () => {
+    it(`/DELETE one assistance not found`, async () => {
         return request(app.getHttpServer())
-            .delete('/goals/99')
+            .delete('/assistances/99')
             .set('Authorization', 'Bearer ' + token2)
             .expect(404);
     });
@@ -204,6 +217,7 @@ describe('Goals', () => {
     afterAll(async () => {
         userRepository.clear();
         classroomRepository.clear();
+        studentRepository.clear();
         const conn = await getConnection();
         await conn.close();
         await app.close();
