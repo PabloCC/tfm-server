@@ -175,6 +175,7 @@ describe('Students', () => {
 
     afterAll(async () => {
         userRepository.clear();
+        classroomRepository.clear();
         const conn = await getConnection();
         await conn.close();
         await app.close();
