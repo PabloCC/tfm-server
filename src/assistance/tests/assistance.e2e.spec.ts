@@ -58,6 +58,7 @@ describe('Assistances', () => {
             name: 'Pablo',
             birthdate: new Date(),
             classroom: classroom[0],
+            image: 'image',
         }]);
     });
 
@@ -65,6 +66,7 @@ describe('Assistances', () => {
     async function configAuth() {
         const data = await userRepository.save([{
             username: 'test',
+            name:  'test',
             email: 'test@email.com',
             role: Role.TEACHER,
             password: 'secret',
@@ -72,6 +74,7 @@ describe('Assistances', () => {
         },
         {
             username: 'test2',
+            name: 'test2',
             email: 'test@email.com',
             role: Role.TEACHER,
             password: 'secret',

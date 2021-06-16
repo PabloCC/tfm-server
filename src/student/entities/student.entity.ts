@@ -13,6 +13,9 @@ export class Student extends BaseEntity {
 
     @Column()
     birthdate: Date
+
+    @Column()
+    image: string;
   
     @ManyToOne(() => Classroom, classroom => classroom.students, { onDelete: 'CASCADE' ,eager: false })
     classroom: Classroom

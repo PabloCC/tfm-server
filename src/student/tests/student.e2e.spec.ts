@@ -47,6 +47,7 @@ describe('Students', () => {
     async function configAuth() {
         const data = await userRepository.save([{
             username: 'test',
+            name: 'test',
             email: 'test@email.com',
             role: Role.TEACHER,
             password: 'secret',
@@ -104,12 +105,13 @@ describe('Students', () => {
         return request(app.getHttpServer())
             .post('/students')
             .set('Authorization', 'Bearer ' + token)
-            .send({ name: 'test', birthdate: '2020-09-03', classroom: classroom[0] })
+            .send({ name: 'test', birthdate: '2020-09-03', classroom: classroom[0], image: 'image' })
             .expect(201)
             .expect({
                 name: 'test',
                 birthdate: '2020-09-03',
                 classroom: { name: 'Test', stage: 1, teachers: [], id: 1 },
+                image: 'image',
                 id: 1
             });
     });
@@ -125,7 +127,7 @@ describe('Students', () => {
         return request(app.getHttpServer())
             .post('/students')
             .set('Authorization', 'Bearer ' + token)
-            .send({ name: 'test', birthdate: '2050-09-03', classroom: classroom[0] })
+            .send({ name: 'test', birthdate: '2050-09-03', classroom: classroom[0], image: 'image' })
             .expect(403);
     });
 
@@ -133,7 +135,7 @@ describe('Students', () => {
         return request(app.getHttpServer())
             .post('/students')
             .set('Authorization', 'Bearer ' + token)
-            .send({ name: 'test', birthdate: '2021-03-03', classroom: classroom[0] })
+            .send({ name: 'test', birthdate: '2021-03-03', classroom: classroom[0], image: 'image' })
             .expect(403);
     });
 
@@ -141,7 +143,7 @@ describe('Students', () => {
         return request(app.getHttpServer())
             .put('/students/1')
             .set('Authorization', 'Bearer ' + token)
-            .send({ name: 'test2', birthdate: '2020-09-03', classroom: classroom[0] })
+            .send({ name: 'test2', birthdate: '2020-09-03', classroom: classroom[0], image: 'image' })
             .expect(200)
             .expect({
                 id: 1,
@@ -149,13 +151,14 @@ describe('Students', () => {
                 birthdate: '2020-09-03',
                 classroom: { name: 'Test', stage: 1, teachers: [], id: 1 },
                 parents: [],
+                image: 'image'
             });
     });
 
     it(`/PUT one student unauthorized`, () => {
         return request(app.getHttpServer())
             .put('/students/1')
-            .send({ name: 'test2', birthdate: '2020-09-03', classroom: classroom[0] })
+            .send({ name: 'test2', birthdate: '2020-09-03', classroom: classroom[0], image: 'image' })
             .expect(401);
     });
 

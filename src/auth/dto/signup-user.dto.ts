@@ -4,6 +4,12 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class SignupUserDto {
     @IsString()
+    @MinLength(3)
+    @MaxLength(70)
+    @ApiProperty()
+    name: string;
+
+    @IsString()
     @MinLength(4)
     @MaxLength(20)
     @IsEmail()

@@ -25,6 +25,7 @@ export class AuthController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get('users/:id')
+  @ApiBearerAuth()
   @ApiOkResponse()
   @ApiUnauthorizedResponse()
   findOne(@Param('id') id: string) {
@@ -46,7 +47,7 @@ export class AuthController {
   @Get('/families')
   @ApiBearerAuth()
   getFamilies(@GetUser() user: User) {
-    if (user.role !== Role.ADMIN) {
+    if (user.role !== Role.ADMIN && user.role !== Role.TEACHER) {
       throw new UnauthorizedException();
     }
     
@@ -66,6 +67,7 @@ export class AuthController {
 
   @UseGuards(AuthGuard('jwt'))
   @Put('users/:id')
+  @ApiBearerAuth()
   @ApiOkResponse()
   @ApiUnauthorizedResponse()
   update(@Param('id') id: string, @Body() signupUserDto: SignupUserDto, @GetUser() user: User) {
@@ -78,6 +80,7 @@ export class AuthController {
 
   @UseGuards(AuthGuard('jwt'))
   @Delete('users/:id')
+  @ApiBearerAuth()
   @ApiOkResponse()
   @ApiUnauthorizedResponse()
   remove(@Param('id') id: string, @GetUser() user: User) {

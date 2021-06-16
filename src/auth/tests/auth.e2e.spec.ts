@@ -38,6 +38,7 @@ describe('Auth', () => {
 
     const data = await userRepository.save([{
       username: 'test',
+      name: 'test',
       email: 'test@email.com',
       role: Role.ADMIN,
       password,
@@ -57,17 +58,19 @@ describe('Auth', () => {
       }
     }).sign({
       id: user[0].id,
+      name: user[0].name,
       username: user[0].username,
       email: user[0].email,
       role: user[0].role,
     });
   }
 
-  it(`/GET signup`, async () => {
+  it(`/POST signup`, async () => {
     return request(app.getHttpServer())
       .post('/auth/signup')
       .send({
         username: 'test2',
+        name: 'test',
         email: 'test@email.com',
         role: Role.ADMIN,
         password: 'secretAa!',
@@ -76,7 +79,7 @@ describe('Auth', () => {
       
   });
 
-  it(`/GET signin`, async () => {
+  it(`/POST signin`, async () => {
     return request(app.getHttpServer())
       .post('/auth/signin')
       .send({
@@ -155,6 +158,7 @@ describe('Auth', () => {
       .put('/auth/users/1')
       .send({
         username: 'test_updated',
+        name: 'test',
         email: 'test@email.com',
         role: Role.ADMIN,
         password: 'secretAa!',

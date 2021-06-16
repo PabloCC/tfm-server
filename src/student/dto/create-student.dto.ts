@@ -14,6 +14,11 @@ export class CreateStudentDto {
     @ApiProperty()
     birthdate: Date;
 
+    @IsString()
+    @MinLength(3)
+    @ApiProperty()
+    image: string;
+
     @ApiProperty({type: Classroom})
     classroom?: Classroom;
 
