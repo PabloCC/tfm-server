@@ -9,6 +9,12 @@ export class CreateGoalDto {
     @ApiProperty()
     name: string;
 
+    @IsString()
+    @MinLength(2)
+    @MaxLength(50)
+    @ApiProperty() 
+    image: string;
+
     @ApiProperty({type: Classroom})
     classroom: Classroom;
 }

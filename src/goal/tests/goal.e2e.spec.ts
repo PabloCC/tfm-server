@@ -130,14 +130,14 @@ describe('Goals', () => {
         return request(app.getHttpServer())
             .post('/goals')
             .set('Authorization', 'Bearer ' + token)
-            .send({ name: 'test', classroom: classroom[0]})
+            .send({ name: 'test', classroom: classroom[0], image: 'image'})
             .expect(201)
     });
 
     it(`/POST one goal unauthorized`, () => {
         return request(app.getHttpServer())
             .post('/goals')
-            .send({ name: 'test', classroom: classroom[0]})
+            .send({ name: 'test', classroom: classroom[0], image: 'image'})
             .expect(401);
     });
 
@@ -146,14 +146,14 @@ describe('Goals', () => {
         return request(app.getHttpServer())
             .put('/goals/1')
             .set('Authorization', 'Bearer ' + token)
-            .send({ name: 'test', classroom: classroom[0]})
+            .send({ name: 'test', classroom: classroom[0], image: 'image'})
             .expect(200)
     });
 
     it(`/PUT one goal unauthorized`, () => {
         return request(app.getHttpServer())
             .put('/goals/1')
-            .send({ name: 'test', classroom: classroom[0]})
+            .send({ name: 'test', classroom: classroom[0], image: 'image'})
             .expect(401);
     });
 
@@ -161,7 +161,7 @@ describe('Goals', () => {
         return request(app.getHttpServer())
             .put('/goals/1')
             .set('Authorization', 'Bearer ' + token2)
-            .send({ name: 'test', classroom: classroom[0]})
+            .send({ name: 'test', classroom: classroom[0], image: 'image'})
             .expect(403);
     });
 
@@ -169,7 +169,7 @@ describe('Goals', () => {
         return request(app.getHttpServer())
             .put('/goals/99')
             .set('Authorization', 'Bearer ' + token2)
-            .send({ name: 'test', classroom: classroom[0]})
+            .send({ name: 'test', classroom: classroom[0], image: 'image'})
             .expect(404);
     });
 
@@ -188,7 +188,7 @@ describe('Goals', () => {
     });
 
     it(`/DELETE one goal forbidden`, async () => {
-        const goal = await app.get('GoalRepository').save([{ name: 'test', classroom: classroom[0]}]);
+        const goal = await app.get('GoalRepository').save([{ name: 'test', classroom: classroom[0], image: 'image'}]);
 
         return request(app.getHttpServer())
             .delete('/goals/' + goal[0].id)

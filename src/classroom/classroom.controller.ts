@@ -39,6 +39,13 @@ export class ClassroomController {
     return this.classroomService.findOne(+id);
   }
 
+  @Get('/student/:id')
+  @ApiOkResponse()
+  @ApiUnauthorizedResponse()
+  findOneByStudent(@GetUser() user: User, @Param('id') id: string) {
+    return this.classroomService.findOneByStudent(user, +id);
+  }
+
   @Put(':id')
   @ApiOkResponse()
   @ApiUnauthorizedResponse()

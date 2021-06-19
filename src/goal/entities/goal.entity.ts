@@ -8,6 +8,9 @@ export class Goal extends BaseEntity {
 
     @Column()
     name: string;
+
+    @Column()
+    image: string;
     
     @ManyToOne(() => Classroom, classroom => classroom.goals, {onDelete: 'CASCADE', eager: true})
     classroom: Classroom;

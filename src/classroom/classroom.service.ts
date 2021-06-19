@@ -30,6 +30,14 @@ export class ClassroomService {
     return this.classroomRepository.findOne(id);
   }
 
+  async findOneByStudent(user: User, id: number) {
+    const classrooms = await this.findAll(user);
+
+    if (classrooms && classrooms.length) {
+      return classrooms.find(item => item.students.some(student => student.id === id));
+    }
+  }
+
   async update(id: number, createClassroomDto: CreateClassroomDto) {
     const classroom = await this.findOne(id);
 
