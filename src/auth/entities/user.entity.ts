@@ -48,12 +48,15 @@ export class User extends BaseEntity {
   student?: Student;
 
   @OneToMany(() => Note, note => note.origin)
+  @ApiProperty()
   notesSent?: Note[];
 
   @OneToMany(() => Note, note => note.target)
+  @ApiProperty()
   notesReceived?: Note[];
 
   @OneToMany(() => Publication, publication => publication.author)
+  @ApiProperty()
   publications?: Publication[];
 
   async validatePassword(password: string): Promise<boolean> {

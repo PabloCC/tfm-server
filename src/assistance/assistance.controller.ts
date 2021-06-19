@@ -3,10 +3,12 @@ import { AssistanceService } from './assistance.service';
 import { CreateAssistanceDto } from './dto/create-assistance.dto';
 import { UpdateAssistanceDto } from './dto/update-assistance.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { GetUser } from '../auth/decorators/get-user-decorator';
 import { Role } from '../auth/enums/user-role.enum';
 import { User } from '../auth/entities/user.entity';
+import { Assistance } from './entities/assistance.entity';
+import { DeleteResult } from 'typeorm';
 
 @Controller('assistances')
 @UseGuards(AuthGuard('jwt'))
@@ -16,8 +18,9 @@ export class AssistanceController {
   constructor(private readonly assistanceService: AssistanceService) {}
 
   @Post()
-  @ApiCreatedResponse()
-  @ApiUnauthorizedResponse()
+  @ApiCreatedResponse({type: Assistance})
+  @ApiUnauthorizedResponse({description: 'Unauthorized'})
+  @ApiBadRequestResponse({description: 'Bad request'})
   create(@Body() createAssistanceDto: CreateAssistanceDto, @GetUser() user: User) {
     if (user.role !== Role.TEACHER) {
       throw new UnauthorizedException();
@@ -27,8 +30,8 @@ export class AssistanceController {
   }
 
   @Get()
-  @ApiOkResponse()
-  @ApiUnauthorizedResponse()
+  @ApiOkResponse({type: Assistance, isArray: true})
+  @ApiUnauthorizedResponse({description: 'Unauthorized'})
   findAll(@GetUser() user: User) {
     if (user.role !== Role.TEACHER) {
       throw new UnauthorizedException();
@@ -38,8 +41,8 @@ export class AssistanceController {
   }
 
   @Get(':id')
-  @ApiOkResponse()
-  @ApiUnauthorizedResponse()
+  @ApiOkResponse({type: Assistance})
+  @ApiUnauthorizedResponse({description: 'Unauthorized'})
   findOne(@Param('id') id: string, @GetUser() user: User) {
     if (user.role !== Role.TEACHER) {
       throw new UnauthorizedException();
@@ -49,8 +52,9 @@ export class AssistanceController {
   }
 
   @Put(':id')
-  @ApiOkResponse()
-  @ApiUnauthorizedResponse()
+  @ApiOkResponse({type: Assistance})
+  @ApiUnauthorizedResponse({description: 'Unauthorized'})
+  @ApiBadRequestResponse({description: 'Bad request'})
   update(@Param('id') id: string, @Body() updateAssistanceDto: UpdateAssistanceDto, @GetUser() user: User) {
     if (user.role !== Role.TEACHER) {
       throw new UnauthorizedException();
@@ -60,8 +64,8 @@ export class AssistanceController {
   }
 
   @Delete(':id')
-  @ApiOkResponse()
-  @ApiUnauthorizedResponse()
+  @ApiOkResponse({type: DeleteResult})
+  @ApiUnauthorizedResponse({description: 'Unauthorized'})
   remove(@Param('id') id: string, @GetUser() user: User) {
     if (user.role !== Role.TEACHER) {
       throw new UnauthorizedException();
