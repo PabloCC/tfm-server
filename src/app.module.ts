@@ -8,13 +8,14 @@ import { NoteModule } from './note/note.module';
 import { PublicationModule } from './publication/publication.module';
 import { GoalModule } from './goal/goal.module';
 import { AssistanceModule } from './assistance/assistance.module';
+import { AchievementModule } from './achievement/achievement.module';
 @Global()
 @Module({
   imports: [
     TypeOrmModule.forRoot(typeOrmConfig), 
     AuthModule, 
     ClassroomModule, 
-    StudentModule, NoteModule, PublicationModule, GoalModule, AssistanceModule
+    StudentModule, NoteModule, PublicationModule, GoalModule, AssistanceModule, AchievementModule
   ],
 })
 export class AppModule {}
