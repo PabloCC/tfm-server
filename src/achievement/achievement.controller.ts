@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, UnauthorizedException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, UnauthorizedException, Put } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { Role } from '../auth/enums/user-role.enum';
@@ -48,7 +48,7 @@ export class AchievementController {
     return this.achievementService.findOne(+id, user);
   }
 
-  @Patch(':id')
+  @Put(':id')
   @ApiOkResponse()
   @ApiUnauthorizedResponse()
   update(@Param('id') id: string, @Body() updateAchievementDto: UpdateAchievementDto, @GetUser() user: User) {

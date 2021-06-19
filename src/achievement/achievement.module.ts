@@ -4,7 +4,7 @@ import { AchievementController } from './achievement.controller';
 import { AchievementRepository } from './repositories/achievement.repository';
 import { AuthModule } from '../auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ClassroomRepository } from 'src/classroom/repositories/classroom.repository';
+import { ClassroomRepository } from '../classroom/repositories/classroom.repository';
 
 @Module({
   imports: [

@@ -10,9 +10,9 @@ export class Achievement extends BaseEntity {
     @Column()
     date: Date;
 
-    @ManyToOne(() => Goal, goal => goal.achievements, {onDelete: 'CASCADE'}) 
+    @ManyToOne(() => Goal, goal => goal.achievements, {onDelete: 'CASCADE', eager: true}) 
     goal: Goal;
 
-    @ManyToOne(() => Student, student => student.achievements, {onDelete: 'CASCADE'}) 
+    @ManyToOne(() => Student, student => student.achievements, {onDelete: 'CASCADE', eager: true}) 
     student: Student;
 }
