@@ -33,10 +33,6 @@ export class AchievementController {
   @ApiOkResponse({type: Achievement, isArray: true})
   @ApiUnauthorizedResponse({description: 'Unauthorized'})
   findAll(@GetUser() user: User) {
-    if (user.role !== Role.TEACHER) {
-      throw new UnauthorizedException();
-    }
-
     return this.achievementService.findAll(user);
   }
 

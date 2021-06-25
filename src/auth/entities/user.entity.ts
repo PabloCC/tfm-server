@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, Unique } from 'typeorm';
+import { BaseEntity, Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, Unique } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Role } from '../enums/user-role.enum';
 import { Classroom } from '../../classroom/entities/classroom.entity';
@@ -47,12 +47,12 @@ export class User extends BaseEntity {
   @ManyToOne(() => Student, student => student.parents)
   student?: Student;
 
-  @OneToMany(() => Note, note => note.origin)
-  @ApiProperty()
+  @OneToMany(() => Note, note => note.origin, {eager: false})
+  @JoinTable()
   notesSent?: Note[];
 
-  @OneToMany(() => Note, note => note.target)
-  @ApiProperty()
+  @OneToMany(() => Note, note => note.target, {eager: false})
+  @JoinTable()
   notesReceived?: Note[];
 
   @OneToMany(() => Publication, publication => publication.author)

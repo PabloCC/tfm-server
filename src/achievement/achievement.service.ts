@@ -21,7 +21,7 @@ export class AchievementService {
   async findAll(user: User) {
     const achievements = await this.achievementRepository.find();
 
-    return this.filterAchievementsByTeacher(achievements, user);
+    return achievements;
   }
 
   async findOne(id: number, user: User) {

@@ -10,7 +10,7 @@ export class NoteRepository extends Repository<Note> {
     async createNote(createNoteDto: CreateNoteDto): Promise<Note> {
         const note = new Note();
         Object.assign(note, createNoteDto);
-        note.date = new Date();
+        note.date = new Date(Date.now());
 
         try {
             await note.save();

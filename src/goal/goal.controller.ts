@@ -31,7 +31,7 @@ export class GoalController {
   }
 
   @Get()
-  @ApiOkResponse({type: Publication, isArray: true})
+  @ApiOkResponse({type: Goal, isArray: true})
   @ApiUnauthorizedResponse({description: 'Unauthorized'})
   findAll(@GetUser() user: User) {
     if (user.role !== Role.TEACHER) {
@@ -42,7 +42,7 @@ export class GoalController {
   }
 
   @Get(':id')
-  @ApiOkResponse({type: Publication})
+  @ApiOkResponse({type: Goal})
   @ApiUnauthorizedResponse({description: 'Unauthorized'})
   findOne(@Param('id') id: string, @GetUser() user: User) {
     if (user.role !== Role.TEACHER) {
@@ -53,7 +53,7 @@ export class GoalController {
   }
 
   @Put(':id')
-  @ApiOkResponse()
+  @ApiOkResponse({type: Goal})
   @ApiUnauthorizedResponse({description: 'Unauthorized'})
   @ApiBadRequestResponse({description: 'Bad request'})
   update(@Param('id') id: string, @Body() updateGoalDto: UpdateGoalDto, @GetUser() user: User) {

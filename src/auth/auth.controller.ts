@@ -44,11 +44,7 @@ export class AuthController {
   @ApiBearerAuth()
   @ApiOkResponse({type: User, isArray: true})
   @ApiUnauthorizedResponse({description: 'Unauthorized'})
-  getTeachers(@GetUser() user: User) {
-    if (user.role !== Role.ADMIN) {
-      throw new UnauthorizedException();
-    }
-
+  getTeachers() {
     return this.authService.getTeachers();
   }
 

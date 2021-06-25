@@ -11,7 +11,7 @@ export class PublicationRepository extends Repository<Publication> {
     async createPublication(createPublicationDto: CreatePublicationDto, user: User): Promise<Publication> {
         const publication = new Publication();
         Object.assign(publication, createPublicationDto);
-        publication.date = new Date();
+        publication.date = new Date(Date.now());
         publication.author = user;
 
         try {

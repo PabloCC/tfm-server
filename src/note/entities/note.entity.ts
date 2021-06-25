@@ -16,9 +16,9 @@ export class Note extends BaseEntity {
     @ApiProperty()
     date: Date;
 
-    @ManyToOne(() => User, user => user.notesSent, {onDelete: 'CASCADE'}) 
+    @ManyToOne(() => User, user => user.notesSent, {eager: true}) 
     origin: User;
 
-    @ManyToOne(() => User, user => user.notesReceived, {onDelete: 'CASCADE'})
+    @ManyToOne(() => User, user => user.notesReceived, {eager: true})
     target: User;
 }

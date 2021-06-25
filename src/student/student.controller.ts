@@ -32,11 +32,7 @@ export class StudentController {
   @Get()
   @ApiOkResponse({type: Student, isArray: true})
   @ApiUnauthorizedResponse({description: 'Unauthorized'})
-  findAll(@GetUser() user: User) {
-    if (user.role !== Role.TEACHER) {
-      throw new UnauthorizedException();
-    }
-
+  findAll() {
     return this.studentService.findAll();
   }
 
