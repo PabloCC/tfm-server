@@ -36,6 +36,7 @@ describe('Notes', () => {
         const data = await userRepository.save([
             {
                 username: 'test',
+                name: 'test',
                 email: 'test@email.com',
                 role: Role.TEACHER,
                 password: 'secret',
@@ -44,6 +45,7 @@ describe('Notes', () => {
             },
             {
                 username: 'test2',
+                name: 'tes2',
                 email: 'test2@email.com',
                 role: Role.TEACHER,
                 password: 'secret',

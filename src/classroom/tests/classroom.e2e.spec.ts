@@ -35,6 +35,7 @@ describe('Classrooms', () => {
     async function configAuth() {
         const data = await userRepository.save([{
             username: 'test',
+            name: 'test',
             email: 'test@email.com',
             role: Role.ADMIN,
             password: 'secret',

@@ -37,7 +37,7 @@ export class StudentRepository extends Repository<Student> {
 
     checkBirthdate(student) {
         const birthdate = new Date(student.birthdate).getTime();
-        const today = new Date().getTime();
+        const today = new Date(Date.now()).getTime();
 
         if (today > birthdate) {
             const timediff = today - birthdate;

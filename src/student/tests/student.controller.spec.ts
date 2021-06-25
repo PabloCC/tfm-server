@@ -45,19 +45,9 @@ describe('StudentController', () => {
     it('should return an array of student', async () => {
       const student: Student = new Student();
       const result = [student];
-      const mockUser: User = new User();
-      mockUser.role = Role.TEACHER;
 
       jest.spyOn(service, 'findAll').mockImplementation(async () => await [student]);
-      expect(await controller.findAll(mockUser)).toStrictEqual(result);
-    });
-
-    it('Unauthorized', async () => {
-      const unauthorized = new UnauthorizedException()
-      const mockUser: User = new User();
-      mockUser.role = Role.ADMIN;
-
-      expect(()=> { controller.findAll(mockUser) }).toThrowError(unauthorized);
+      expect(await controller.findAll()).toStrictEqual(result);
     });
   });
 

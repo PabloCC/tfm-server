@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
+import { User } from '../../auth/entities/user.entity';
 import { typeOrmTestConfig } from '../../config/typeorm.test.config';
 import { Note } from '../entities/note.entity';
 import { NoteController } from '../note.controller';
@@ -40,9 +41,10 @@ describe('NoteController', () => {
     it('should return an array of student', async () => {
       const note: Note = new Note();
       const result = [note];
+      const mockUser: User = new User();
 
       jest.spyOn(service, 'findAll').mockImplementation(async () => await [note]);
-      expect(await controller.findAll()).toStrictEqual(result);
+      expect(await controller.findAll(mockUser)).toStrictEqual(result);
     });
   });
 

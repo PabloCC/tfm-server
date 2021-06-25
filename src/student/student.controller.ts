@@ -3,10 +3,12 @@ import { StudentService } from './student.service';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { UpdateStudentDto } from './dto/update-student.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { GetUser } from '../auth/decorators/get-user-decorator';
 import { User } from '../auth/entities/user.entity';
 import { Role } from '../auth/enums/user-role.enum';
+import { Student } from './entities/student.entity';
+import { DeleteResult } from 'typeorm';
 
 @Controller('students')
 @UseGuards(AuthGuard('jwt'))
@@ -16,8 +18,9 @@ export class StudentController {
   constructor(private readonly studentService: StudentService) {}
 
   @Post()
-  @ApiCreatedResponse()
-  @ApiUnauthorizedResponse()
+  @ApiCreatedResponse({type: Student})
+  @ApiUnauthorizedResponse({description: 'Unauthorized'})
+  @ApiBadRequestResponse({description: 'Bad request'})
   create(@Body() createStudentDto: CreateStudentDto, @GetUser() user: User) {
     if (user.role !== Role.TEACHER) {
       throw new UnauthorizedException();
@@ -27,19 +30,15 @@ export class StudentController {
   }
 
   @Get()
-  @ApiOkResponse()
-  @ApiUnauthorizedResponse()
-  findAll(@GetUser() user: User) {
-    if (user.role !== Role.TEACHER) {
-      throw new UnauthorizedException();
-    }
-
+  @ApiOkResponse({type: Student, isArray: true})
+  @ApiUnauthorizedResponse({description: 'Unauthorized'})
+  findAll() {
     return this.studentService.findAll();
   }
 
   @Get(':id')
-  @ApiOkResponse()
-  @ApiUnauthorizedResponse()
+  @ApiOkResponse({type: Student})
+  @ApiUnauthorizedResponse({description: 'Unauthorized'})
   findOne(@Param('id') id: string, @GetUser() user: User) {
     if (user.role !== Role.TEACHER) {
       throw new UnauthorizedException();
@@ -49,8 +48,9 @@ export class StudentController {
   }
 
   @Put(':id')
-  @ApiOkResponse()
-  @ApiUnauthorizedResponse()
+  @ApiOkResponse({type: Student})
+  @ApiUnauthorizedResponse({description: 'Unauthorized'})
+  @ApiBadRequestResponse({description: 'Bad request'})
   update(@Param('id') id: string, @Body() updateStudentDto: UpdateStudentDto, @GetUser() user: User) {
     if (user.role !== Role.TEACHER) {
       throw new UnauthorizedException();
@@ -60,8 +60,8 @@ export class StudentController {
   }
 
   @Delete(':id')
-  @ApiOkResponse()
-  @ApiUnauthorizedResponse()
+  @ApiOkResponse({type: DeleteResult})
+  @ApiUnauthorizedResponse({description: 'Unauthorized'})
   remove(@Param('id') id: string, @GetUser() user: User) {
     if (user.role !== Role.TEACHER) {
       throw new UnauthorizedException();
